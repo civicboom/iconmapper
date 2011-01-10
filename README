@@ -1,0 +1,32 @@
+
+      __                                                               
+     |__| ____  ____   ____   _____ _____  ______ ______   ___________ 
+     |  |/ ___\/  _ \ /    \ /     \\__  \ \____ \\____ \_/ __ \_  __ \
+     |  \  \__(  <_> )   |  \  Y Y  \/ __ \|  |_> >  |_> >  ___/|  | \/
+     |__|\___  >____/|___|  /__|_|  (____  /   __/|   __/ \___  >__|   
+             \/           \/      \/     \/|__|   |__|        \/       
+
+
+A small python script to turn a folder full of images into a single .png with
+accompanying .css to aid with display.
+
+
+Quickstart:
+  1. iconmapper foo/bar/*.png
+  2. upload icons.png and icons.css to your server
+  3. <link rel="stylesheet" type="text/css" href="icons.css" />
+  4. <span class="icon icon-globe"><span>World View</span></span>
+
+
+Original:
+  Oran Looney
+  http://oranlooney.com/make-css-icons-python-image-library/
+
+Extra bits:
+  Shish on behalf of Civicboom <shish@civicboom.com>
+
+
+This work is licensed under the Creative Commons Attribution 3.0 United 
+States License. To view a copy of this license, visit 
+http://creativecommons.org/licenses/by/3.0/us/ or send a letter to Creative
+Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.

@@ -13,8 +13,15 @@
 import os
 import sys
 import Image
+from optparse import OptionParser
 
-filenames = sys.argv[1:]
+parser = OptionParser()
+parser.add_option("-q", "--quiet",
+        action="store_false", dest="verbose", default=True,
+        help="don't print status messages to stdout")
+(options, args) = parser.parse_args()
+
+filenames = args
 prefixLen = len(os.path.commonprefix(filenames))
 
 iconMap = [(
@@ -23,35 +30,35 @@ iconMap = [(
     ) for fn in filenames]
 
 images = [Image.open(filename) for cssClass, filename in iconMap]
-print "%d images will be combined." % len(images)
+if options.verbose: print "%d images will be combined." % len(images)
 
 master_width = max([i.size[0] for i in images])
 master_height = sum([i.size[1] for i in images])
-print "the master image will by %d by %d" % (master_width, master_height)
+if options.verbose: print "the master image will by %d by %d" % (master_width, master_height)
 
-print "creating image...",
+if options.verbose: print "creating image...",
 master = Image.new(
     mode='RGBA',
     size=(master_width, master_height),
     color=(0,0,0,0))  # fully transparent
-print "created."
+if options.verbose: print "created."
 
-print "adding images...",
+if options.verbose: print "adding images...",
 offset = 0
 for count, image in enumerate(images):
-    print "\radding image %d..." % (count+1),
+    if options.verbose: print "\radding image %d..." % (count+1),
     master.paste(image,(0,offset))
     offset = offset + image.size[1]
-print "done."
+if options.verbose: print "done."
 
-print "saving icons.png...",
+if options.verbose: print "saving icons.png...",
 master.save('icons.png')
-print "saved."
+if options.verbose: print "saved."
 
 
 cssTemplate = '.%s {background-position: 6px %dpx;}\n'
 
-print 'saving icons.css...',
+if options.verbose: print 'saving icons.css...',
 offset = 0
 iconCssFile = open('icons.css' ,'w')
 iconCssFile.write("""/* common bits */
@@ -68,6 +75,6 @@ for count, pair in enumerate(iconMap):
     iconCssFile.write( cssTemplate % (cssClass, 4-offset) )
     offset = offset + image.size[1]
 iconCssFile.close()
-print 'created.'
+if options.verbose: print 'created.'
 
 

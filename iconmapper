@@ -15,7 +15,7 @@ import sys
 import Image
 from optparse import OptionParser
 
-parser = OptionParser()
+parser = OptionParser(usage="%prog [-q] [-c foo.css] [-p foo.png] icon1.png icon2.png ...")
 parser.add_option("-q", "--quiet",
         action="store_false", dest="verbose", default=True,
         help="don't print status messages to stdout")

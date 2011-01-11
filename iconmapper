@@ -22,6 +22,9 @@ parser.add_option("-q", "--quiet",
 parser.add_option("-c", "--css",
         dest="css_filename", default="icons.css",
         help="output filename for the CSS")
+parser.add_option("-p", "--png",
+        dest="png_filename", default="icons.png",
+        help="output filename for the PNG")
 (options, args) = parser.parse_args()
 
 filenames = args
@@ -54,8 +57,8 @@ for count, image in enumerate(images):
     offset = offset + image.size[1]
 if options.verbose: print "done."
 
-if options.verbose: print "saving icons.png...",
-master.save('icons.png')
+if options.verbose: print "saving %s..." % options.png_filename,
+master.save(options.png_filename)
 if options.verbose: print "saved."
 
 

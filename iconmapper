@@ -19,6 +19,9 @@ parser = OptionParser()
 parser.add_option("-q", "--quiet",
         action="store_false", dest="verbose", default=True,
         help="don't print status messages to stdout")
+parser.add_option("-c", "--css",
+        dest="css_filename", default="icons.css",
+        help="output filename for the CSS")
 (options, args) = parser.parse_args()
 
 filenames = args
@@ -58,9 +61,9 @@ if options.verbose: print "saved."
 
 cssTemplate = '.%s {background-position: 6px %dpx;}\n'
 
-if options.verbose: print 'saving icons.css...',
+if options.verbose: print 'saving %s...' % options.css_filename,
 offset = 0
-iconCssFile = open('icons.css' ,'w')
+iconCssFile = open(options.css_filename ,'w')
 iconCssFile.write("""/* common bits */
 .icon, .icon_large {background-image:url(icons.png); display:inline-block; vertical-align:top;}
 .icon span, .icon_large span {display: none;}

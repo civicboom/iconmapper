@@ -1,0 +1,6 @@
+Package: cb-iconmapper
+Version: VERSION
+Architecture: all
+Maintainer: Shish <shish@civicboom.com>
+Depends: python, python-imaging
+Description: A tool to merge multiple images into one, with CSS to extract them

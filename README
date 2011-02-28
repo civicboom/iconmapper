@@ -12,10 +12,11 @@ accompanying .css to aid with display.
 
 
 Quickstart:
-  1. iconmapper foo/bar/*.png
+  1. iconmapper -c icons.css -p icons.png \
+     icons/globe_16.png icons/globe_32.png icons/cake_16.png
   2. upload icons.png and icons.css to your server
   3. <link rel="stylesheet" type="text/css" href="icons.css" />
-  4. <span class="icon icon-globe"><span>World View</span></span>
+  4. <span class="icon16 globe"><span>World View</span></span>
 
 
 Original:

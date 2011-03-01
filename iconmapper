@@ -15,7 +15,7 @@ import sys
 import Image
 from optparse import OptionParser
 
-parser = OptionParser(usage="%prog [-q] [-c foo.css] [-p foo.png] icon1.png icon2.png ...")
+parser = OptionParser(usage="%prog [-q] [-c foo.css] [-p foo.png] [-a /abs/path.png] icon1.png icon2.png ...")
 parser.add_option("-q", "--quiet",
         action="store_false", dest="verbose", default=True,
         help="don't print status messages to stdout")
@@ -25,6 +25,9 @@ parser.add_option("-c", "--css",
 parser.add_option("-p", "--png",
         dest="png_filename", default="icons.png",
         help="output filename for the PNG")
+parser.add_option("-a", "--path",
+        dest="png_path", default=None,
+        help="path for the CSS to refer to icons.png")
 (options, args) = parser.parse_args()
 
 if not args:
@@ -71,7 +74,7 @@ offset = 0
 iconCssFile = open(options.css_filename ,'w')
 iconCssFile.write("/* common bits */\n")
 for size in set([n.size[0] for n in images]):
-    iconCssFile.write(".icon%d {background-image:url(%s); display:inline-block; vertical-align:top;}\n" % (size, options.png_filename))
+    iconCssFile.write(".icon%d {background-image:url(%s); display:inline-block; vertical-align:top;}\n" % (size, options.png_path or options.png_filename))
     iconCssFile.write(".icon%d span {display: none;}\n" % (size, ))
     iconCssFile.write(".icon%d {width: %dpx; height: %dpx;}\n" % (size, size, size))
 

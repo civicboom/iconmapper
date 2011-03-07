@@ -14,3 +14,6 @@ cb-iconmapper.deb: control Makefile
 
 clean:
 	rm -rf fs-* cb-*.deb
+
+pep8:
+	pep8 -r iconmapper

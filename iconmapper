@@ -18,9 +18,16 @@ from optparse import OptionParser
 
 class MappedImage(object):
     def name_to_class(self, name):
+        """
+        >>> name_to_class("food/waffle_16.png")
+        'food_waffle'
+        """
         return name.replace("/", "-").replace(".png", "")[:-3]
 
     def __init__(self, filename, prefixLen=0):
+        """
+        Store some metadata on each icon
+        """
         self.filename = filename
         self.css_class = self.name_to_class(filename[prefixLen:])
         self.image = Image.open(filename)
@@ -32,6 +39,9 @@ class MappedImage(object):
 
 class Mapper(object):
     def parse_args(self, args):
+        """
+        Get a list of filenames (and settings) from the command line
+        """
         parser = OptionParser(usage="%prog [options] icon1.png icon2.png ...")
         parser.add_option("-q", "--quiet",
                 action="store_false", dest="verbose", default=True,
@@ -48,6 +58,9 @@ class Mapper(object):
         return parser.parse_args()
 
     def get_images(self, filenames):
+        """
+        Take a list of filenames, return a list of MappedImage() objects
+        """
         if not filenames:
             parser.error("You need to specify some input files")
         prefixLen = len(os.path.commonprefix(filenames))
@@ -56,6 +69,12 @@ class Mapper(object):
         return images
 
     def wibble(self, images):
+        """
+        Take a list of MappedImage() objects, adjust their x and y offsets
+        until they don't overlap eachother
+        """
+        # this could be a lot more advanced - current it just puts all the
+        # images into a single column
         offset = 0
         for image in images:
             image.x = 0
@@ -63,6 +82,10 @@ class Mapper(object):
             offset = offset + image.h
 
     def create_master(self, images):
+        """
+        Take a list of positioned MappedImage() objects, merge them into
+        a single PIL Image()
+        """
         size = max([i.x + i.w for i in images]), max([i.y + i.h for i in images])
         if self.verbose: print "the master image will by %d by %d" % size
 
@@ -82,11 +105,18 @@ class Mapper(object):
         return master
 
     def save_png(self, master, png_filename):
+        """
+        Save a PIL Image() as a PNG file
+        """
         if self.verbose: print "saving %s..." % png_filename,
         master.save(png_filename)
         if self.verbose: print "saved."
 
     def save_css(self, images, css_filename, png_filename):
+        """
+        Take a list of positioned MappedImage() objects, write out a CSS
+        file listing each image's name and offset within the master PNG
+        """
         if self.verbose: print 'saving %s...' % css_filename,
         iconCssFile = open(css_filename, 'w')
         iconCssFile.write("/* common bits */\n")
@@ -102,6 +132,9 @@ class Mapper(object):
         if self.verbose: print 'created.'
 
     def main(self, args):
+        """
+        Run through the process
+        """
         (options, filenames) = self.parse_args(args)
         self.verbose = options.verbose
 

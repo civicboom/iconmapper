@@ -36,6 +36,9 @@ class MappedImage(object):
         self.x = -1
         self.y = -1
 
+    def __lt__(a, b):
+        return a.h > b.h
+
 
 class Mapper(object):
     def parse_args(self, args):
@@ -77,11 +80,30 @@ class Mapper(object):
         """
         # this could be a lot more advanced - current it just puts all the
         # images into a single column
-        offset = 0
+        #offset = 0
+        #for image in images:
+        #    image.x = 0
+        #    image.y = offset
+        #    offset = offset + image.h
+
+        # wibbler #2: makes an image a few times as wide as the widest icon,
+        # then lays out the icons in rows
+        images.sort()
+        width = max([i.w for i in images])
+        width = min(5, width * len([i for i in images if i.w == width]))
+        row_height = 0
+        offset_y = 0
+        offset_x = 0
         for image in images:
-            image.x = 0
-            image.y = offset
-            offset = offset + image.h
+            if offset_x + image.w > width:
+                offset_y = offset_y + row_height
+                offset_x = 0
+                row_height = 0
+                next_row = True
+            image.x = offset_x
+            image.y = offset_y
+            offset_x = offset_x + image.w
+            row_height = max(row_height, image.h)
 
     def create_master(self, images):
         """

@@ -62,7 +62,9 @@ class Mapper(object):
         Take a list of filenames, return a list of MappedImage() objects
         """
         if not filenames:
-            parser.error("You need to specify some input files")
+            #parser.error("You need to specify some input files")
+            print("You need to specify some input files")
+            sys.exit(1)
         prefixLen = len(os.path.commonprefix(filenames))
         images = [MappedImage(filename, prefixLen) for filename in filenames]
         if self.verbose: print "%d images will be combined." % len(images)

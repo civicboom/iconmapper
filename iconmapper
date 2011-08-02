@@ -90,7 +90,7 @@ class Mapper(object):
         # then lays out the icons in rows
         images.sort()
         width = max([i.w for i in images])
-        width = min(5, width * len([i for i in images if i.w == width]))
+        width = width * min(5, len([i for i in images if i.w == width]))
         row_height = 0
         offset_y = 0
         offset_x = 0

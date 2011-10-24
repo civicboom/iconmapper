@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
-# Original:
+# Original idea:
 #   http://oranlooney.com/make-css-icons-python-image-library/
-# Extra bits:
+# Rewrite by:
 #   Shish on behalf of Civicboom <shish@civicboom.com>
 
 # This work is licensed under the Creative Commons Attribution 3.0 United
@@ -41,6 +41,13 @@ class MappedImage(object):
 
 
 class Mapper(object):
+    def log(self, msg, nl=True):
+        if self.verbose:
+            if nl:
+                print msg
+            else:
+                print msg,
+
     def parse_args(self, args):
         """
         Get a list of filenames (and settings) from the command line
@@ -70,7 +77,7 @@ class Mapper(object):
             sys.exit(1)
         prefixLen = len(os.path.commonprefix(filenames))
         images = [MappedImage(filename, prefixLen) for filename in filenames]
-        if self.verbose: print "%d images will be combined." % len(images)
+        self.log("%d images will be combined." % len(images))
         return images
 
     def wibble(self, images):
@@ -105,26 +112,26 @@ class Mapper(object):
             offset_x = offset_x + image.w
             row_height = max(row_height, image.h)
 
-    def create_master(self, images):
+    def create_master(self, imgs):
         """
         Take a list of positioned MappedImage() objects, merge them into
         a single PIL Image()
         """
-        size = max([i.x + i.w for i in images]), max([i.y + i.h for i in images])
-        if self.verbose: print "the master image will by %d by %d" % size
+        size = max([i.x + i.w for i in imgs]), max([i.y + i.h for i in imgs])
+        self.log("the master image will by %d by %d" % size)
 
-        if self.verbose: print "creating image...",
+        self.log("creating image...", False)
         master = Image.new(
             mode='RGBA',
             size=size,
             color=(0, 0, 0, 0))  # fully transparent
-        if self.verbose: print "created."
+        self.log("created.")
 
-        if self.verbose: print "adding images...",
-        for count, image in enumerate(images):
-            if self.verbose: print "\radding image %d..." % (count + 1),
+        self.log("adding imgs...", False)
+        for count, image in enumerate(imgs):
+            self.log("\radding image %d..." % (count + 1), False)
             master.paste(image.image, (image.x, image.y))
-        if self.verbose: print "done."
+        self.log("done.")
 
         return master
 
@@ -132,16 +139,16 @@ class Mapper(object):
         """
         Save a PIL Image() as a PNG file
         """
-        if self.verbose: print "saving %s..." % png_filename,
+        self.log("saving %s..." % png_filename, False)
         master.save(png_filename)
-        if self.verbose: print "saved."
+        self.log("saved.")
 
     def save_css(self, images, css_filename, png_filename):
         """
         Take a list of positioned MappedImage() objects, write out a CSS
         file listing each image's name and offset within the master PNG
         """
-        if self.verbose: print 'saving %s...' % css_filename,
+        self.log('saving %s...' % css_filename, False)
         iconCssFile = open(css_filename, 'w')
         iconCssFile.write("/* common bits */\n")
         for size in set([n.w for n in images]):
@@ -153,7 +160,7 @@ class Mapper(object):
         for image in images:
             iconCssFile.write('.icon%d.i_%s {background-position: %dpx %dpx;}\n' % (image.w, image.css_class, -image.x, -image.y))
         iconCssFile.close()
-        if self.verbose: print 'created.'
+        self.log('created.')
 
     def main(self, args):
         """
@@ -161,11 +168,12 @@ class Mapper(object):
         """
         (options, filenames) = self.parse_args(args)
         self.verbose = options.verbose
+        png_ref = options.png_path or options.png_filename
 
         images = self.get_images(filenames)
         self.wibble(images)
         self.save_png(self.create_master(images), options.png_filename)
-        self.save_css(images, options.css_filename, options.png_path or options.png_filename)
+        self.save_css(images, options.css_filename, png_ref)
 
         return 0
 
